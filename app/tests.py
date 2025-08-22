@@ -1,18 +1,30 @@
-from services.fetcher import get_stock_data
-from services.features import calculate_features
-from services.predictor import train_model
+# app/tests.py
+
+from app.services.fetcher import get_stock_data
+from app.services.features import calculate_features
+from app.services.predictor import train_model
 import pandas as pd
 
-tickers = ["PETR4.SA", "NVDA", "NKE", "DIS"] 
+df_tickers = pd.read_excel("app/data/TickersB3.xlsx")
+
+tickers = df_tickers.iloc[:, 0].dropna().tolist()
+
+# Coloca SA no final (B3 no yf)
+tickers = [ticker if ticker.endswith(".SA") else f"{ticker}.SA" for ticker in tickers]
+
+print(f"{len(tickers)} tickers carregados")
+print(tickers[:10])
 
 df_list = []
 
 for ticker in tickers:
-    df = get_stock_data(ticker)
+    df = get_stock_data(ticker, period="10y")
     df_features = calculate_features(df)
     df_features["ticker"] = ticker
     df_list.append(df_features)
-    print(df_features[["return_1d", "ma7", "ma21", "volatility", "rsi", "target"]].tail())
 
 df_full = pd.concat(df_list).reset_index(drop=True)
+
+df_full["ticker_code"] = df_full["ticker"].astype('category').cat.codes
+
 train_model(df_full)

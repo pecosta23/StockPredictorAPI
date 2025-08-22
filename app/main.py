@@ -1,3 +1,5 @@
+# app/main.py
+
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from app.services.fetcher import get_stock_data
