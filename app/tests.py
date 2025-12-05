@@ -6,6 +6,7 @@ from app.services.predictor import train_model
 import pandas as pd
 
 df_tickers = pd.read_excel("app/data/TickersB3.xlsx")
+#df_tickers = pd.read_excel("app/data/classificacao_tickers.xlsx")
 
 tickers = df_tickers.iloc[:, 0].dropna().tolist()
 

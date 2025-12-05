@@ -17,15 +17,15 @@ def train_model(df: pd.DataFrame, model_path: str = "app/models/ml_model.pkl"):
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
     model = XGBClassifier(
-        n_estimators=100,
-        max_depth=10,
-        learning_rate=0.1,
-        subsample=0.8,
-        colsample_bytree=0.8,
-        objective="multi:softmax",
-        num_class=9,
-        eval_metric="mlogloss",
-        use_label_encoder=False
+    n_estimators=100,
+    max_depth=10,
+    learning_rate=0.1,
+    subsample=0.8,
+    colsample_bytree=0.8,
+    objective="multi:softmax",
+    num_class=3,
+    eval_metric="mlogloss",
+    use_label_encoder=False
     )
     
     model.fit(X_train, y_train)
@@ -50,10 +50,11 @@ def load_model_and_predict(df_feat: pd.DataFrame, model_path: str = "app/models/
     prediction = model.predict(last_row)[0]
 
     action_map = {
-        1: "Comprar",
-        0: "Manter",
-        -1: "Vender"
+    2: "Comprar",
+    1: "Manter",
+    0: "Vender"
     }
+
 
     result = {
         "prediction": int(prediction),
